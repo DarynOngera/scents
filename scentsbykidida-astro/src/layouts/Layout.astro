@@ -1,0 +1,114 @@
+---
+export interface Props {
+	title: string;
+}
+
+const { title } = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="description" content="Luxury perfumes for the modern connoisseur" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<meta name="generator" content={Astro.generator} />
+		<title>{title}</title>
+		<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@300;400;500;600&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+	</head>
+	<body>
+		<slot />
+	</body>
+</html>
+
+<style is:global>
+	/* Reset and Base Styles */
+	* {
+		margin: 0;
+		padding: 0;
+		box-sizing: border-box;
+	}
+
+	body {
+		font-family: 'Inter', sans-serif;
+		line-height: 1.6;
+		color: #333;
+		background-color: #ffffff;
+		overflow-x: hidden;
+	}
+
+	.container {
+		max-width: 1200px;
+		margin: 0 auto;
+		padding: 0 20px;
+	}
+
+	/* Typography */
+	h1, h2, h3, h4 {
+		font-family: 'Playfair Display', serif;
+		font-weight: 400;
+	}
+
+	.section-title {
+		font-size: 3rem;
+		text-align: center;
+		margin-bottom: 4rem;
+		color: #1a1a1a;
+		font-weight: 300;
+		letter-spacing: 2px;
+		position: relative;
+	}
+
+	.section-title::after {
+		content: '';
+		position: absolute;
+		bottom: -1rem;
+		left: 50%;
+		transform: translateX(-50%);
+		width: 60px;
+		height: 2px;
+		background: linear-gradient(90deg, #d4af37, #ffd700);
+	}
+
+	/* Luxury Color Palette */
+	:root {
+		--luxury-gold: #d4af37;
+		--luxury-dark: #1a1a1a;
+		--luxury-charcoal: #2c2c2c;
+		--luxury-cream: #faf8f5;
+		--luxury-silver: #c0c0c0;
+		--luxury-accent: #8b7355;
+	}
+
+	/* Smooth Scrolling */
+	html {
+		scroll-behavior: smooth;
+	}
+
+	/* Loading Animation */
+	@keyframes fadeInUp {
+		from {
+			opacity: 0;
+			transform: translateY(30px);
+		}
+		to {
+			opacity: 1;
+			transform: translateY(0);
+		}
+	}
+
+	/* Responsive Design */
+	@media (max-width: 768px) {
+		.section-title {
+			font-size: 2rem;
+		}
+	}
+
+	@media (max-width: 480px) {
+		.section-title {
+			font-size: 1.8rem;
+		}
+	}
+</style>

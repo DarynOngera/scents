@@ -1,0 +1,48 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Navigation from '../components/Navigation.astro';
+import Hero from '../components/Hero.astro';
+import ProductCollection from '../components/ProductCollection.astro';
+import About from '../components/About.astro';
+import Contact from '../components/Contact.astro';
+import Footer from '../components/Footer.astro';
+import ShoppingCart from '../components/ShoppingCart.astro';
+
+// Product data
+const products = [
+	{
+		id: 'midnight-elegance',
+		name: 'Midnight Elegance',
+		description: 'A sophisticated blend of bergamot and sandalwood',
+		price: 180
+	},
+	{
+		id: 'golden-dawn',
+		name: 'Golden Dawn',
+		description: 'Fresh citrus notes with warm amber undertones',
+		price: 220
+	},
+	{
+		id: 'velvet-rose',
+		name: 'Velvet Rose',
+		description: 'Luxurious rose petals with hints of vanilla',
+		price: 195
+	},
+	{
+		id: 'ocean-breeze',
+		name: 'Ocean Breeze',
+		description: 'Crisp marine notes with white tea essence',
+		price: 165
+	}
+];
+---
+
+<Layout title="Scents by Kidida - Luxury Perfumes">
+	<Navigation />
+	<Hero />
+	<ProductCollection products={products} />
+	<About />
+	<Contact />
+	<Footer />
+	<ShoppingCart />
+</Layout>

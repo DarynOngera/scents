@@ -1,0 +1,78 @@
+---
+// About section component
+---
+
+<section id="about" class="about">
+    <div class="container">
+        <div class="about-content">
+            <div class="about-text">
+                <h2>Crafted with Passion</h2>
+                <p>At Scents by Kidida, we believe that fragrance is an art form. Each bottle represents hours of meticulous craftsmanship, using only the finest ingredients sourced from around the world.</p>
+                <p>Our master perfumers blend tradition with innovation to create scents that tell a story, evoke emotions, and leave lasting impressions.</p>
+            </div>
+            <div class="about-image">
+                <div class="about-placeholder"></div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<style>
+/* About Section */
+.about {
+    padding: 100px 0;
+    background: #f8f8f8;
+}
+
+.about-content {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+    align-items: center;
+}
+
+.about-text h2 {
+    font-size: 2.5rem;
+    margin-bottom: 1.5rem;
+    color: #2c2c2c;
+    font-weight: 300;
+}
+
+.about-text p {
+    color: #666;
+    margin-bottom: 1.5rem;
+    line-height: 1.8;
+    font-size: 1.1rem;
+}
+
+.about-image {
+    height: 400px;
+}
+
+.about-placeholder {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(145deg, #e8e8e8, #d8d8d8);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
+.about-placeholder::before {
+    content: '';
+    width: 150px;
+    height: 200px;
+    background: linear-gradient(145deg, #d0d0d0, #c0c0c0);
+    border-radius: 20px 20px 60px 60px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .about-content {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+    }
+}
+</style>
