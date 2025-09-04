@@ -1,0 +1,91 @@
+{
+  "baseCurrency": "USD",
+  "currencies": {
+    "USD": {
+      "code": "USD",
+      "symbol": "$",
+      "name": "US Dollar",
+      "rate": 1.0,
+      "countries": ["US", "PR", "VI", "GU", "AS", "MP"]
+    },
+    "EUR": {
+      "code": "EUR",
+      "symbol": "€",
+      "name": "Euro",
+      "rate": 0.92,
+      "countries": ["DE", "FR", "IT", "ES", "NL", "BE", "AT", "PT", "IE", "FI", "GR", "LU", "SI", "CY", "MT", "SK", "EE", "LV", "LT"]
+    },
+    "GBP": {
+      "code": "GBP",
+      "symbol": "£",
+      "name": "British Pound",
+      "rate": 0.79,
+      "countries": ["GB", "IM", "JE", "GG"]
+    },
+    "KES": {
+      "code": "KES",
+      "symbol": "KSh",
+      "name": "Kenyan Shilling",
+      "rate": 129.5,
+      "countries": ["KE"]
+    },
+    "CAD": {
+      "code": "CAD",
+      "symbol": "C$",
+      "name": "Canadian Dollar",
+      "rate": 1.35,
+      "countries": ["CA"]
+    },
+    "AUD": {
+      "code": "AUD",
+      "symbol": "A$",
+      "name": "Australian Dollar",
+      "rate": 1.52,
+      "countries": ["AU", "NR", "TV", "KI"]
+    },
+    "JPY": {
+      "code": "JPY",
+      "symbol": "¥",
+      "name": "Japanese Yen",
+      "rate": 149.8,
+      "countries": ["JP"]
+    },
+    "CNY": {
+      "code": "CNY",
+      "symbol": "¥",
+      "name": "Chinese Yuan",
+      "rate": 7.24,
+      "countries": ["CN"]
+    },
+    "INR": {
+      "code": "INR",
+      "symbol": "₹",
+      "name": "Indian Rupee",
+      "rate": 83.2,
+      "countries": ["IN", "BT"]
+    },
+    "ZAR": {
+      "code": "ZAR",
+      "symbol": "R",
+      "name": "South African Rand",
+      "rate": 18.7,
+      "countries": ["ZA", "LS", "SZ", "NA"]
+    },
+    "NGN": {
+      "code": "NGN",
+      "symbol": "₦",
+      "name": "Nigerian Naira",
+      "rate": 775.0,
+      "countries": ["NG"]
+    },
+    "EGP": {
+      "code": "EGP",
+      "symbol": "E£",
+      "name": "Egyptian Pound",
+      "rate": 30.9,
+      "countries": ["EG"]
+    }
+  },
+  "fallbackCurrency": "USD",
+  "lastUpdated": "2024-01-15T00:00:00Z"
+}

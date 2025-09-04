@@ -1,5 +1,7 @@
 ---
 // Navigation component
+import CurrencySelector from './CurrencySelector.astro';
+
 export interface Props {
     navigation: Array<{
         name: string;
@@ -38,6 +40,9 @@ const { navigation, site } = Astro.props;
             {navigation.map((item) => (
                 <li><a href={item.href}>{item.name}</a></li>
             ))}
+            <li class="nav-utility">
+                <CurrencySelector />
+            </li>
             <li class="cart-icon">
                 <i class="fas fa-shopping-bag"></i>
                 <span class="cart-count">0</span>
@@ -99,6 +104,11 @@ const { navigation, site } = Astro.props;
     list-style: none;
     align-items: center;
     gap: 2rem;
+}
+
+.nav-utility {
+    display: flex;
+    align-items: center;
 }
 
 .nav-menu a {

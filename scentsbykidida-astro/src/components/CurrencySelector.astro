@@ -1,0 +1,366 @@
+---
+// Currency Selector Component
+---
+
+<div class="currency-selector" id="currencySelector">
+  <div class="currency-display" id="currencyDisplay">
+    <span class="currency-icon">💱</span>
+    <span class="currency-text" id="currentCurrency">USD</span>
+    <span class="currency-arrow">▼</span>
+  </div>
+  
+  <div class="currency-dropdown" id="currencyDropdown">
+    <div class="currency-header">
+      <h4>Select Currency</h4>
+      <div class="detection-status" id="detectionStatus">
+        <span class="status-indicator"></span>
+        <span class="status-text">Auto-detected</span>
+      </div>
+    </div>
+    
+    <div class="currency-list" id="currencyList">
+      <!-- Currency options will be populated by JavaScript -->
+    </div>
+    
+    <div class="currency-footer">
+      <small>Prices converted from USD at current exchange rates</small>
+    </div>
+  </div>
+</div>
+
+<style>
+.currency-selector {
+  position: relative;
+  display: inline-block;
+  font-family: 'Inter', sans-serif;
+}
+
+.currency-display {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1rem;
+  background: rgba(255, 255, 255, 0.95);
+  border: 2px solid rgba(139, 115, 85, 0.2);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+  min-width: 100px;
+  justify-content: space-between;
+}
+
+.currency-display:hover {
+  border-color: rgba(139, 115, 85, 0.4);
+  background: rgba(255, 255, 255, 1);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(139, 115, 85, 0.15);
+}
+
+.currency-icon {
+  font-size: 1.1rem;
+}
+
+.currency-text {
+  font-weight: 500;
+  color: #2c2c2c;
+  font-size: 0.9rem;
+  letter-spacing: 0.5px;
+}
+
+.currency-arrow {
+  font-size: 0.8rem;
+  color: #8b7355;
+  transition: transform 0.3s ease;
+}
+
+.currency-selector.open .currency-arrow {
+  transform: rotate(180deg);
+}
+
+.currency-dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: white;
+  border: 2px solid rgba(139, 115, 85, 0.2);
+  border-radius: 8px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+  z-index: 1000;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-10px);
+  transition: all 0.3s ease;
+  margin-top: 0.5rem;
+  min-width: 280px;
+}
+
+.currency-selector.open .currency-dropdown {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.currency-header {
+  padding: 1rem 1rem 0.5rem;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.currency-header h4 {
+  margin: 0 0 0.5rem 0;
+  color: #2c2c2c;
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+.detection-status {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.8rem;
+  color: #666;
+}
+
+.status-indicator {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #4CAF50;
+}
+
+.status-indicator.manual {
+  background: #FF9800;
+}
+
+.status-indicator.failed {
+  background: #f44336;
+}
+
+.currency-list {
+  max-height: 300px;
+  overflow-y: auto;
+  padding: 0.5rem 0;
+}
+
+.currency-option {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem 1rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  border: none;
+  background: none;
+  width: 100%;
+  text-align: left;
+}
+
+.currency-option:hover {
+  background: rgba(139, 115, 85, 0.1);
+}
+
+.currency-option.active {
+  background: rgba(139, 115, 85, 0.15);
+  color: #8b7355;
+  font-weight: 500;
+}
+
+.currency-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.currency-code {
+  font-weight: 500;
+  color: #2c2c2c;
+  font-size: 0.9rem;
+}
+
+.currency-name {
+  font-size: 0.8rem;
+  color: #666;
+}
+
+.currency-symbol {
+  font-size: 1.1rem;
+  color: #8b7355;
+  font-weight: 500;
+}
+
+.currency-footer {
+  padding: 0.75rem 1rem;
+  border-top: 1px solid #f0f0f0;
+  background: #fafafa;
+  border-radius: 0 0 6px 6px;
+}
+
+.currency-footer small {
+  color: #666;
+  font-size: 0.75rem;
+  line-height: 1.4;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .currency-dropdown {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    right: auto;
+    transform: translate(-50%, -50%);
+    margin-top: 0;
+    max-width: 90vw;
+    max-height: 80vh;
+  }
+  
+  .currency-selector.open .currency-dropdown {
+    transform: translate(-50%, -50%);
+  }
+}
+
+/* Scrollbar Styling */
+.currency-list::-webkit-scrollbar {
+  width: 6px;
+}
+
+.currency-list::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 3px;
+}
+
+.currency-list::-webkit-scrollbar-thumb {
+  background: rgba(139, 115, 85, 0.3);
+  border-radius: 3px;
+}
+
+.currency-list::-webkit-scrollbar-thumb:hover {
+  background: rgba(139, 115, 85, 0.5);
+}
+</style>
+
+<script>
+// Import currency utilities
+import('/src/utils/currencyUtils.js').then(module => {
+    const { currencyUtils } = module;
+    
+    let isInitialized = false;
+    
+    // Initialize currency selector
+    async function initializeCurrencySelector() {
+        if (isInitialized) return;
+        
+        const selector = document.getElementById('currencySelector');
+        const display = document.getElementById('currencyDisplay');
+        const dropdown = document.getElementById('currencyDropdown');
+        const currentCurrency = document.getElementById('currentCurrency');
+        const currencyList = document.getElementById('currencyList');
+        const detectionStatus = document.getElementById('detectionStatus');
+        
+        if (!selector || !display || !dropdown || !currentCurrency || !currencyList || !detectionStatus) {
+            return;
+        }
+        
+        // Wait for currency utils to initialize
+        await currencyUtils.initialize();
+        
+        // Populate currency list
+        const currencies = currencyUtils.getAvailableCurrencies();
+        currencyList.innerHTML = '';
+        
+        currencies.forEach(currency => {
+            const option = document.createElement('button');
+            option.className = 'currency-option';
+            option.setAttribute('data-currency', currency.code);
+            
+            option.innerHTML = `
+                <div class="currency-info">
+                    <div class="currency-code">${currency.code}</div>
+                    <div class="currency-name">${currency.name}</div>
+                </div>
+                <div class="currency-symbol">${currency.symbol}</div>
+            `;
+            
+            option.addEventListener('click', () => {
+                selectCurrency(currency.code);
+            });
+            
+            currencyList.appendChild(option);
+        });
+        
+        // Update current currency display
+        updateCurrentCurrency();
+        
+        // Toggle dropdown
+        display.addEventListener('click', (e) => {
+            e.stopPropagation();
+            selector.classList.toggle('open');
+        });
+        
+        // Close dropdown when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!selector.contains(e.target)) {
+                selector.classList.remove('open');
+            }
+        });
+        
+        // Listen for currency changes
+        window.addEventListener('currencyChanged', (e) => {
+            updateCurrentCurrency();
+            updateDetectionStatus(e.detail);
+        });
+        
+        // Close dropdown on escape key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                selector.classList.remove('open');
+            }
+        });
+        
+        isInitialized = true;
+    }
+    
+    function selectCurrency(currencyCode) {
+        currencyUtils.setCurrency(currencyCode);
+        document.getElementById('currencySelector').classList.remove('open');
+    }
+    
+    function updateCurrentCurrency() {
+        const current = currencyUtils.getCurrentCurrency();
+        const currencyInfo = currencyUtils.getCurrencyInfo(current);
+        
+        if (currencyInfo) {
+            document.getElementById('currentCurrency').textContent = current;
+            
+            // Update active option
+            document.querySelectorAll('.currency-option').forEach(option => {
+                option.classList.toggle('active', option.getAttribute('data-currency') === current);
+            });
+        }
+    }
+    
+    function updateDetectionStatus(detail) {
+        const statusIndicator = document.querySelector('.status-indicator');
+        const statusText = document.querySelector('.status-text');
+        
+        if (detail && detail.manual) {
+            statusIndicator.className = 'status-indicator manual';
+            statusText.textContent = 'Manually selected';
+        } else if (detail && detail.locationData && detail.locationData.detected) {
+            statusIndicator.className = 'status-indicator';
+            statusText.textContent = `Auto-detected (${detail.locationData.method})`;
+        } else {
+            statusIndicator.className = 'status-indicator failed';
+            statusText.textContent = 'Using default';
+        }
+    }
+    
+    // Initialize when DOM is ready
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initializeCurrencySelector);
+    } else {
+        initializeCurrencySelector();
+    }
+});
+</script>

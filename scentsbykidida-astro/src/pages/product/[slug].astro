@@ -57,7 +57,7 @@ const { site, navigation } = siteData;
           <h1 class="product-title">{product.name}</h1>
           <p class="product-description">{product.description}</p>
           
-          <div class="product-price">${product.price}</div>
+          <div class="product-price" data-base-price={product.price}>${product.price}</div>
 
           <!-- Fragrance Notes -->
           {product.notes && (
@@ -460,6 +460,30 @@ const { site, navigation } = siteData;
 </style>
 
 <script>
+// Import currency utilities
+import('/src/utils/currencyUtils.js').then(module => {
+    const { currencyUtils } = module;
+    
+    // Initialize currency detection and update prices
+    currencyUtils.initialize().then(() => {
+        updateProductPrice();
+    });
+    
+    // Listen for currency changes
+    window.addEventListener('currencyChanged', () => {
+        updateProductPrice();
+    });
+    
+    function updateProductPrice() {
+        const priceElement = document.querySelector('.product-price[data-base-price]');
+        if (priceElement) {
+            const basePrice = parseFloat(priceElement.getAttribute('data-base-price'));
+            const formattedPrice = currencyUtils.formatPrice(basePrice);
+            priceElement.textContent = formattedPrice;
+        }
+    }
+});
+
 // Add to cart functionality (same as in ProductCollection)
 document.addEventListener('DOMContentLoaded', function() {
     const addToCartBtn = document.querySelector('.add-to-cart-btn');
