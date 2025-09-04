@@ -1,0 +1,674 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Navigation from '../../components/Navigation.astro';
+import Footer from '../../components/Footer.astro';
+
+// Import JSON data
+import blogData from '../../data/blog.json';
+import siteData from '../../data/site.json';
+
+export async function getStaticPaths() {
+  const { posts } = blogData;
+  
+  return posts.map((post) => ({
+    params: { slug: post.slug },
+    props: { post },
+  }));
+}
+
+const { post } = Astro.props;
+const { site, navigation } = siteData;
+const { categories, authors } = blogData;
+
+// Find author info
+const author = authors.find(a => a.name === post.author);
+
+// Find related posts (same category, excluding current post)
+const relatedPosts = blogData.posts
+  .filter(p => p.category === post.category && p.id !== post.id)
+  .slice(0, 3);
+
+function formatDate(dateString: string) {
+    return new Date(dateString).toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+    });
+}
+
+function formatContent(content: string) {
+    // Convert markdown-style formatting to HTML
+    return content
+        .replace(/## (.*)/g, '<h2>$1</h2>')
+        .replace(/### (.*)/g, '<h3>$1</h3>')
+        .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+        .replace(/\*(.*?)\*/g, '<em>$1</em>')
+        .replace(/\n\n/g, '</p><p>')
+        .replace(/^(.*)$/gm, '<p>$1</p>')
+        .replace(/<p><h/g, '<h')
+        .replace(/<\/h([1-6])><\/p>/g, '</h$1>')
+        .replace(/<p><\/p>/g, '');
+}
+
+const categoryColor = categories.find(c => c.id.toLowerCase() === post.category.toLowerCase())?.color || '#8b7355';
+---
+
+<Layout title={`${post.title} - ${site.name}`}>
+  <Navigation navigation={navigation} site={site} />
+  
+  <main class="blog-post-page">
+    <div class="container">
+      <!-- Breadcrumb -->
+      <nav class="breadcrumb">
+        <a href="/">Home</a>
+        <span class="separator">/</span>
+        <a href="/blog">Blog</a>
+        <span class="separator">/</span>
+        <span class="current">{post.title}</span>
+      </nav>
+
+      <!-- Article Header -->
+      <header class="article-header">
+        <div class="article-meta">
+          <span class="article-category" style={`background-color: ${categoryColor}`}>
+            {post.category}
+          </span>
+          <span class="article-read-time">{post.readTime}</span>
+        </div>
+        
+        <h1 class="article-title">{post.title}</h1>
+        
+        <div class="article-info">
+          <div class="author-info">
+            {author?.avatar && (
+              <img src={author.avatar} alt={author.name} class="author-avatar" />
+            )}
+            <div class="author-details">
+              <span class="author-name">By {post.author}</span>
+              <span class="publish-date">{formatDate(post.publishedAt)}</span>
+            </div>
+          </div>
+          
+          <div class="article-tags">
+            {post.tags.map((tag) => (
+              <span class="tag">#{tag}</span>
+            ))}
+          </div>
+        </div>
+      </header>
+
+      <!-- Featured Image -->
+      {post.image && (
+        <div class="featured-image">
+          <img src={post.image} alt={post.title} />
+        </div>
+      )}
+
+      <!-- Article Content -->
+      <article class="article-content">
+        <div class="content-wrapper" set:html={formatContent(post.content)}>
+        </div>
+      </article>
+
+      <!-- Author Bio -->
+      {author && (
+        <section class="author-bio">
+          <div class="bio-content">
+            {author.avatar && (
+              <img src={author.avatar} alt={author.name} class="bio-avatar" />
+            )}
+            <div class="bio-text">
+              <h3 class="bio-name">About {author.name}</h3>
+              <p class="bio-description">{author.bio}</p>
+            </div>
+          </div>
+        </section>
+      )}
+
+      <!-- Related Posts -->
+      {relatedPosts.length > 0 && (
+        <section class="related-posts">
+          <h3 class="related-title">Related Articles</h3>
+          <div class="related-grid">
+            {relatedPosts.map((relatedPost) => (
+              <article class="related-post">
+                <div class="related-image">
+                  {relatedPost.image ? (
+                    <img src={relatedPost.image} alt={relatedPost.title} />
+                  ) : (
+                    <div class="related-placeholder">
+                      <span class="placeholder-icon">📖</span>
+                    </div>
+                  )}
+                </div>
+                <div class="related-content">
+                  <span class="related-category" style={`background-color: ${categoryColor}`}>
+                    {relatedPost.category}
+                  </span>
+                  <h4 class="related-post-title">
+                    <a href={`/blog/${relatedPost.slug}`}>{relatedPost.title}</a>
+                  </h4>
+                  <p class="related-excerpt">{relatedPost.excerpt}</p>
+                  <div class="related-meta">
+                    <span class="related-author">By {relatedPost.author}</span>
+                    <span class="related-read-time">{relatedPost.readTime}</span>
+                  </div>
+                </div>
+              </article>
+            ))}
+          </div>
+        </section>
+      )}
+
+      <!-- Back to Blog -->
+      <div class="back-to-blog">
+        <a href="/blog" class="back-link">
+          ← Back to All Articles
+        </a>
+      </div>
+    </div>
+  </main>
+
+  <Footer site={site} />
+</Layout>
+
+<style>
+/* Blog Post Page */
+.blog-post-page {
+  padding-top: 100px;
+  min-height: 100vh;
+  background: #ffffff;
+}
+
+.container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+/* Breadcrumb */
+.breadcrumb {
+  margin-bottom: 2rem;
+  font-size: 0.9rem;
+  color: #666;
+}
+
+.breadcrumb a {
+  color: #8b7355;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.breadcrumb a:hover {
+  color: #2c2c2c;
+}
+
+.separator {
+  margin: 0 0.5rem;
+  color: #ccc;
+}
+
+.current {
+  color: #2c2c2c;
+  font-weight: 500;
+}
+
+/* Article Header */
+.article-header {
+  margin-bottom: 3rem;
+  text-align: center;
+}
+
+.article-meta {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.article-category {
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.article-read-time {
+  color: #666;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.article-title {
+  font-size: 3rem;
+  color: #1a1a1a;
+  margin-bottom: 2rem;
+  font-weight: 300;
+  line-height: 1.2;
+  letter-spacing: -0.5px;
+}
+
+.article-info {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+}
+
+.author-info {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.author-avatar {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #f0f0f0;
+}
+
+.author-details {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.author-name {
+  font-weight: 500;
+  color: #1a1a1a;
+  font-size: 1rem;
+}
+
+.publish-date {
+  color: #666;
+  font-size: 0.9rem;
+}
+
+.article-tags {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.tag {
+  color: #8b7355;
+  font-size: 0.8rem;
+  font-weight: 500;
+  padding: 0.25rem 0.5rem;
+  background: rgba(139, 115, 85, 0.1);
+  border-radius: 12px;
+  transition: all 0.3s ease;
+}
+
+.tag:hover {
+  background: rgba(139, 115, 85, 0.2);
+}
+
+/* Featured Image */
+.featured-image {
+  margin-bottom: 3rem;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+}
+
+.featured-image img {
+  width: 100%;
+  height: auto;
+  max-height: 400px;
+  object-fit: cover;
+}
+
+/* Article Content */
+.article-content {
+  margin-bottom: 4rem;
+}
+
+.content-wrapper {
+  font-size: 1.1rem;
+  line-height: 1.8;
+  color: #333;
+}
+
+.content-wrapper h2 {
+  font-size: 2rem;
+  color: #1a1a1a;
+  margin: 2.5rem 0 1.5rem 0;
+  font-weight: 400;
+  border-bottom: 2px solid #8b7355;
+  padding-bottom: 0.5rem;
+}
+
+.content-wrapper h3 {
+  font-size: 1.5rem;
+  color: #1a1a1a;
+  margin: 2rem 0 1rem 0;
+  font-weight: 500;
+}
+
+.content-wrapper p {
+  margin-bottom: 1.5rem;
+}
+
+.content-wrapper strong {
+  color: #1a1a1a;
+  font-weight: 600;
+}
+
+.content-wrapper em {
+  color: #8b7355;
+}
+
+/* Author Bio */
+.author-bio {
+  background: linear-gradient(135deg, #fafafa, #f5f5f5);
+  border-radius: 16px;
+  padding: 2rem;
+  margin-bottom: 4rem;
+  border-left: 4px solid #8b7355;
+}
+
+.bio-content {
+  display: flex;
+  gap: 1.5rem;
+  align-items: flex-start;
+}
+
+.bio-avatar {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid white;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  flex-shrink: 0;
+}
+
+.bio-name {
+  font-size: 1.3rem;
+  color: #1a1a1a;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+}
+
+.bio-description {
+  color: #666;
+  line-height: 1.6;
+  margin: 0;
+}
+
+/* Related Posts */
+.related-posts {
+  margin-bottom: 4rem;
+}
+
+.related-title {
+  font-size: 2rem;
+  color: #1a1a1a;
+  margin-bottom: 2rem;
+  font-weight: 400;
+  text-align: center;
+}
+
+.related-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+}
+
+.related-post {
+  background: white;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+  transition: all 0.3s ease;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.related-post:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+}
+
+.related-image {
+  height: 150px;
+  overflow: hidden;
+  background: #f8f8f8;
+}
+
+.related-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.related-post:hover .related-image img {
+  transform: scale(1.05);
+}
+
+.related-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, #f0f0f0, #e8e8e8);
+}
+
+.placeholder-icon {
+  font-size: 2rem;
+  opacity: 0.5;
+}
+
+.related-content {
+  padding: 1.25rem;
+}
+
+.related-category {
+  color: white;
+  padding: 0.25rem 0.75rem;
+  border-radius: 12px;
+  font-size: 0.7rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 0.75rem;
+  display: inline-block;
+}
+
+.related-post-title {
+  margin-bottom: 0.75rem;
+}
+
+.related-post-title a {
+  color: #1a1a1a;
+  text-decoration: none;
+  font-size: 1.1rem;
+  font-weight: 500;
+  line-height: 1.3;
+  transition: color 0.3s ease;
+}
+
+.related-post-title a:hover {
+  color: #8b7355;
+}
+
+.related-excerpt {
+  color: #666;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  margin-bottom: 1rem;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.related-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.8rem;
+  color: #666;
+  padding-top: 0.75rem;
+  border-top: 1px solid #f0f0f0;
+}
+
+.related-author {
+  font-weight: 500;
+}
+
+/* Back to Blog */
+.back-to-blog {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #8b7355;
+  text-decoration: none;
+  font-weight: 500;
+  padding: 0.75rem 1.5rem;
+  border: 1px solid rgba(139, 115, 85, 0.2);
+  border-radius: 12px;
+  transition: all 0.3s ease;
+  background: rgba(139, 115, 85, 0.05);
+}
+
+.back-link:hover {
+  background: #8b7355;
+  color: white;
+  border-color: #8b7355;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(139, 115, 85, 0.2);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .container {
+    max-width: 100%;
+    padding: 0 15px;
+  }
+  
+  .article-title {
+    font-size: 2.5rem;
+  }
+  
+  .article-info {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+  
+  .article-tags {
+    width: 100%;
+  }
+  
+  .bio-content {
+    flex-direction: column;
+    text-align: center;
+  }
+  
+  .bio-avatar {
+    align-self: center;
+  }
+  
+  .related-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 480px) {
+  .blog-post-page {
+    padding-top: 80px;
+  }
+  
+  .article-title {
+    font-size: 2rem;
+  }
+  
+  .article-meta {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+  
+  .content-wrapper {
+    font-size: 1rem;
+  }
+  
+  .content-wrapper h2 {
+    font-size: 1.5rem;
+  }
+  
+  .content-wrapper h3 {
+    font-size: 1.25rem;
+  }
+  
+  .author-bio {
+    padding: 1.5rem;
+  }
+}
+</style>
+
+<script>
+// Add smooth scrolling for anchor links
+document.addEventListener('DOMContentLoaded', function() {
+    // Add reading progress indicator
+    const progressBar = document.createElement('div');
+    progressBar.className = 'reading-progress';
+    progressBar.innerHTML = '<div class="progress-fill"></div>';
+    document.body.appendChild(progressBar);
+    
+    // Update progress on scroll
+    window.addEventListener('scroll', function() {
+        const article = document.querySelector('.article-content');
+        if (!article) return;
+        
+        const articleTop = article.offsetTop;
+        const articleHeight = article.offsetHeight;
+        const windowHeight = window.innerHeight;
+        const scrollTop = window.pageYOffset;
+        
+        const progress = Math.min(
+            Math.max((scrollTop - articleTop + windowHeight * 0.5) / articleHeight, 0),
+            1
+        );
+        
+        const progressFill = document.querySelector('.progress-fill');
+        if (progressFill) {
+            progressFill.style.width = (progress * 100) + '%';
+        }
+    });
+});
+</script>
+
+<style is:global>
+/* Reading Progress Bar */
+.reading-progress {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background: rgba(139, 115, 85, 0.1);
+    z-index: 9999;
+}
+
+.progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #8b7355, #6d5a44);
+    width: 0%;
+    transition: width 0.1s ease;
+}
+</style>

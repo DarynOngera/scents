@@ -21,9 +21,10 @@
     }
   },
   "navigation": [
-    { "name": "Home", "href": "#home" },
-    { "name": "Collection", "href": "#collection" },
-    { "name": "About", "href": "#about" },
-    { "name": "Contact", "href": "#contact" }
+    { "name": "Home", "href": "/" },
+    { "name": "Collection", "href": "/#collection" },
+    { "name": "Blog", "href": "/blog" },
+    { "name": "About", "href": "/#about" },
+    { "name": "Contact", "href": "/#contact" }
   ]
 }

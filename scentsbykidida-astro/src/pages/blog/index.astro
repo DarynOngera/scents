@@ -1,0 +1,21 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Navigation from '../../components/Navigation.astro';
+import Footer from '../../components/Footer.astro';
+import BlogListing from '../../components/BlogListing.astro';
+
+// Import JSON data
+import blogData from '../../data/blog.json';
+import siteData from '../../data/site.json';
+
+const { posts } = blogData;
+const { site, navigation } = siteData;
+---
+
+<Layout title={`Blog - ${site.name}`}>
+  <Navigation navigation={navigation} site={site} />
+  
+  <BlogListing posts={posts} />
+
+  <Footer site={site} />
+</Layout>
