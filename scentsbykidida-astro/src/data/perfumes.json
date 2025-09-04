@@ -1,0 +1,286 @@
+{
+  "products": [
+    {
+      "id": "midnight-elegance",
+      "slug": "midnight-elegance",
+      "name": "Midnight Elegance",
+      "description": "A sophisticated blend that captures the essence of twilight sophistication",
+      "price": 180,
+      "category": "Oriental",
+      "productType": "perfume",
+      "gender": "unisex",
+      "notes": {
+        "top": ["Bergamot", "Black Pepper"],
+        "middle": ["Rose", "Jasmine"],
+        "base": ["Sandalwood", "Amber"]
+      },
+      "image": "/images/ElizabethArden.avif",
+      "inStock": true,
+      "featured": true
+    },
+    {
+      "id": "golden-dawn",
+      "slug": "golden-dawn",
+      "name": "Golden Dawn",
+      "description": "Fresh citrus awakening with warm amber embrace",
+      "price": 220,
+      "category": "Citrus",
+      "productType": "perfume",
+      "gender": "unisex",
+      "notes": {
+        "top": ["Lemon", "Orange Blossom"],
+        "middle": ["Neroli", "Petitgrain"],
+        "base": ["Amber", "Musk"]
+      },
+      "image": "/images/versaceBright.webp",
+      "inStock": true,
+      "featured": true
+    },
+    {
+      "id": "velvet-rose",
+      "slug": "velvet-rose",
+      "name": "Velvet Rose",
+      "description": "Luxurious rose garden in full bloom with creamy vanilla whispers",
+      "price": 195,
+      "category": "Floral",
+      "productType": "perfume",
+      "gender": "female",
+      "notes": {
+        "top": ["Bulgarian Rose", "Peony"],
+        "middle": ["Rose Petals", "Lily"],
+        "base": ["Vanilla", "White Musk"]
+      },
+      "image": "/images/gardenia.jpg",
+      "inStock": true,
+      "featured": true
+    },
+    {
+      "id": "ocean-breeze",
+      "slug": "ocean-breeze",
+      "name": "Ocean Breeze",
+      "description": "Crisp marine freshness with delicate tea ceremony elegance",
+      "price": 165,
+      "category": "Aquatic",
+      "productType": "perfume",
+      "gender": "unisex",
+      "notes": {
+        "top": ["Sea Salt", "Bergamot"],
+        "middle": ["White Tea", "Jasmine"],
+        "base": ["Driftwood", "Ambergris"]
+      },
+      "image": "/images/foreverElizabeth.jpg",
+      "inStock": true,
+      "featured": false
+    },
+    {
+      "id": "forever-liz",
+      "slug": "forever-liz",
+      "name": "Forever Liz",
+      "description": "A timeless fragrance that combines the essence of Elizabeth Arden with the sophistication of Versace",
+      "price": 250,
+      "category": "Oriental",
+      "productType": "perfume",
+      "gender": "unisex",
+      "notes": {
+        "top": ["Bergamot", "Black Pepper"],
+        "middle": ["Rose", "Jasmine"],
+        "base": ["Sandalwood", "Amber"]
+      },
+      "image": "/images/amethyst.jpg",
+      "inStock": true,
+      "featured": false
+    },
+    {
+      "id": "calvin-klein-signature",
+      "slug": "calvin-klein-signature",
+      "name": "Calvin Klein Signature",
+      "description": "A modern and sophisticated fragrance with clean, contemporary appeal",
+      "price": 180,
+      "category": "Fresh",
+      "productType": "perfume",
+      "gender": "unisex",
+      "notes": {
+        "top": ["Citrus", "Green Apple"],
+        "middle": ["Lily of the Valley", "Jasmine"],
+        "base": ["Cedar", "White Musk"]
+      },
+      "image": "/images/calvinKlein.webp",
+      "inStock": true,
+      "featured": false
+    },
+    {
+      "id": "midnight-warrior",
+      "slug": "midnight-warrior",
+      "name": "Midnight Warrior",
+      "description": "Bold and masculine fragrance with woody and spicy notes",
+      "price": 210,
+      "category": "Woody",
+      "productType": "perfume",
+      "gender": "male",
+      "notes": {
+        "top": ["Black Pepper", "Cardamom"],
+        "middle": ["Cedar", "Vetiver"],
+        "base": ["Sandalwood", "Leather"]
+      },
+      "image": "/images/male-perfume.jpg",
+      "inStock": true,
+      "featured": true
+    },
+    {
+      "id": "royal-oud",
+      "slug": "royal-oud",
+      "name": "Royal Oud",
+      "description": "Luxurious oud-based fragrance for the distinguished gentleman",
+      "price": 280,
+      "category": "Oriental",
+      "productType": "perfume",
+      "gender": "male",
+      "notes": {
+        "top": ["Saffron", "Rose"],
+        "middle": ["Oud", "Patchouli"],
+        "base": ["Amber", "Musk"]
+      },
+      "image": "/images/oud-perfume.jpg",
+      "inStock": true,
+      "featured": true
+    },
+    {
+      "id": "vanilla-silk-oil",
+      "slug": "vanilla-silk-body-oil",
+      "name": "Vanilla Silk Body Oil",
+      "description": "Luxurious body oil with vanilla and silk proteins for smooth, scented skin",
+      "price": 85,
+      "category": "Vanilla",
+      "productType": "body-oil",
+      "gender": "unisex",
+      "notes": {
+        "top": ["Sweet Vanilla", "Coconut"],
+        "middle": ["Silk Proteins", "Shea Butter"],
+        "base": ["Warm Musk", "Sandalwood"]
+      },
+      "image": "/images/body-oil.jpg",
+      "inStock": true,
+      "featured": false
+    },
+    {
+      "id": "lavender-dreams-oil",
+      "slug": "lavender-dreams-body-oil",
+      "name": "Lavender Dreams Body Oil",
+      "description": "Calming lavender body oil perfect for relaxation and skin nourishment",
+      "price": 75,
+      "category": "Floral",
+      "productType": "body-oil",
+      "gender": "unisex",
+      "notes": {
+        "top": ["French Lavender", "Bergamot"],
+        "middle": ["Chamomile", "Rose"],
+        "base": ["Vanilla", "White Musk"]
+      },
+      "image": "/images/lavender-oil.jpg",
+      "inStock": true,
+      "featured": false
+    },
+    {
+      "id": "citrus-burst-wash",
+      "slug": "citrus-burst-body-wash",
+      "name": "Citrus Burst Body Wash",
+      "description": "Energizing body wash with natural citrus oils and moisturizing formula",
+      "price": 45,
+      "category": "Citrus",
+      "productType": "body-wash",
+      "gender": "unisex",
+      "notes": {
+        "top": ["Orange", "Lemon", "Grapefruit"],
+        "middle": ["Lime", "Mint"],
+        "base": ["Clean Musk", "Aloe Vera"]
+      },
+      "image": "/images/body-wash.jpg",
+      "inStock": true,
+      "featured": false
+    },
+    {
+      "id": "rose-garden-wash",
+      "slug": "rose-garden-body-wash",
+      "name": "Rose Garden Body Wash",
+      "description": "Luxurious rose-infused body wash with moisturizing botanicals",
+      "price": 50,
+      "category": "Floral",
+      "productType": "body-wash",
+      "gender": "female",
+      "notes": {
+        "top": ["Bulgarian Rose", "Peony"],
+        "middle": ["Rose Petals", "Geranium"],
+        "base": ["Soft Musk", "Glycerin"]
+      },
+      "image": "/images/rose-wash.jpg",
+      "inStock": true,
+      "featured": false
+    }
+  ],
+  "categories": [
+    {
+      "id": "oriental",
+      "name": "Oriental",
+      "description": "Rich, warm, and exotic fragrances"
+    },
+    {
+      "id": "citrus",
+      "name": "Citrus",
+      "description": "Fresh, energizing, and uplifting scents"
+    },
+    {
+      "id": "floral",
+      "name": "Floral",
+      "description": "Elegant, romantic, and feminine fragrances"
+    },
+    {
+      "id": "aquatic",
+      "name": "Aquatic",
+      "description": "Clean, fresh, and oceanic scents"
+    },
+    {
+      "id": "woody",
+      "name": "Woody",
+      "description": "Masculine, earthy, and sophisticated scents"
+    },
+    {
+      "id": "vanilla",
+      "name": "Vanilla",
+      "description": "Sweet, warm, and comforting fragrances"
+    }
+  ],
+  "productTypes": [
+    {
+      "id": "perfume",
+      "name": "Perfumes",
+      "description": "Luxury fragrances for lasting scent"
+    },
+    {
+      "id": "body-oil",
+      "name": "Body Oils",
+      "description": "Nourishing oils with beautiful fragrances"
+    },
+    {
+      "id": "body-wash",
+      "name": "Body Washes",
+      "description": "Cleansing washes with luxurious scents"
+    }
+  ],
+  "genders": [
+    {
+      "id": "female",
+      "name": "For Her",
+      "description": "Fragrances designed for women"
+    },
+    {
+      "id": "male",
+      "name": "For Him",
+      "description": "Fragrances designed for men"
+    },
+    {
+      "id": "unisex",
+      "name": "Unisex",
+      "description": "Fragrances for everyone"
+    }
+  ]
+}

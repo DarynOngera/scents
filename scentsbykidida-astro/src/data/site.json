@@ -1,0 +1,29 @@
+{
+  "site": {
+    "name": "Scents by Kidida",
+    "tagline": "Luxury Redefined",
+    "description": "Discover our exclusive collection of premium fragrances crafted for the discerning individual",
+    "logo": {
+      "image": "/images/logo.png",
+      "alt": "Scents by Kidida Logo",
+      "width": 270,
+      "height": 110
+    },
+    "contact": {
+      "address": "123 Luxury Lane, Fashion District, New York, NY 10001",
+      "phone": "+254 720 965 929",
+      "email": "hello@scentsbykidida.com"
+    },
+    "social": {
+      "instagram": "https://www.instagram.com/scentsbykidida/",
+      "facebook": "https://www.facebook.com/scentsbykidida/",
+      "twitter": "https://twitter.com/scentsbykidida"
+    }
+  },
+  "navigation": [
+    { "name": "Home", "href": "#home" },
+    { "name": "Collection", "href": "#collection" },
+    { "name": "About", "href": "#about" },
+    { "name": "Contact", "href": "#contact" }
+  ]
+}

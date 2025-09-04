@@ -1,17 +1,43 @@
 ---
 // Navigation component
+export interface Props {
+    navigation: Array<{
+        name: string;
+        href: string;
+    }>;
+    site: {
+        name: string;
+        logo?: {
+            image: string;
+            alt: string;
+            width: number;
+            height: number;
+        };
+    };
+}
+
+const { navigation, site } = Astro.props;
 ---
 
 <nav class="navbar">
     <div class="nav-container">
         <div class="nav-logo">
-            <h1>Scents by Kidida</h1>
+            {site.logo ? (
+                <img 
+                    src={site.logo.image} 
+                    alt={site.logo.alt} 
+                    width={site.logo.width} 
+                    height={site.logo.height}
+                    class="logo-image"
+                />
+            ) : (
+                <h1>{site.name}</h1>
+            )}
         </div>
         <ul class="nav-menu">
-            <li><a href="#home">Home</a></li>
-            <li><a href="#collection">Collection</a></li>
-            <li><a href="#about">About</a></li>
-            <li><a href="#contact">Contact</a></li>
+            {navigation.map((item) => (
+                <li><a href={item.href}>{item.name}</a></li>
+            ))}
             <li class="cart-icon">
                 <i class="fas fa-shopping-bag"></i>
                 <span class="cart-count">0</span>
@@ -34,7 +60,7 @@
     background: rgba(255, 255, 255, 0.95);
     backdrop-filter: blur(10px);
     z-index: 1000;
-    padding: 1rem 0;
+    padding: 0.5rem 0;
     border-bottom: 1px solid rgba(0, 0, 0, 0.05);
     transition: all 0.3s ease;
 }
@@ -53,6 +79,19 @@
     color: #2c2c2c;
     font-weight: 300;
     letter-spacing: 2px;
+}
+
+.logo-image {
+    max-height: 80px;
+    max-width: 280px;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+    transition: opacity 0.3s ease;
+}
+
+.logo-image:hover {
+    opacity: 0.8;
 }
 
 .nav-menu {
@@ -118,6 +157,15 @@
 
 /* Responsive Design */
 @media (max-width: 768px) {
+    .navbar {
+        padding: 0.5rem 0;
+    }
+    
+    .logo-image {
+        max-height: 60px;
+        max-width: 200px;
+    }
+    
     .hamburger {
         display: flex;
     }
@@ -137,6 +185,25 @@
     
     .nav-menu.active {
         left: 0;
+    }
+}
+
+@media (max-width: 480px) {
+    .navbar {
+        padding: 0.25rem 0;
+    }
+    
+    .nav-container {
+        padding: 0 15px;
+    }
+    
+    .logo-image {
+        max-height: 50px;
+        max-width: 160px;
+    }
+    
+    .nav-logo h1 {
+        font-size: 1.4rem;
     }
 }
 </style>

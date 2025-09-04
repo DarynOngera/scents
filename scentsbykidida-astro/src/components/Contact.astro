@@ -1,5 +1,14 @@
 ---
 // Contact section component
+export interface Props {
+    contact: {
+        address: string;
+        phone: string;
+        email: string;
+    };
+}
+
+const { contact } = Astro.props;
 ---
 
 <section id="contact" class="contact">
@@ -11,21 +20,21 @@
                     <i class="fas fa-map-marker-alt"></i>
                     <div>
                         <h4>Visit Our Boutique</h4>
-                        <p>123 Luxury Lane, Fashion District<br>New York, NY 10001</p>
+                        <p>{contact.address}</p>
                     </div>
                 </div>
                 <div class="contact-item">
                     <i class="fas fa-phone"></i>
                     <div>
                         <h4>Call Us</h4>
-                        <p>+1 (555) 123-4567</p>
+                        <p>{contact.phone}</p>
                     </div>
                 </div>
                 <div class="contact-item">
                     <i class="fas fa-envelope"></i>
                     <div>
                         <h4>Email</h4>
-                        <p>hello@scentsbykidida.com</p>
+                        <p>{contact.email}</p>
                     </div>
                 </div>
             </div>

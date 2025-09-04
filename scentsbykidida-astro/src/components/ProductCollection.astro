@@ -1,5 +1,5 @@
 ---
-// Product Collection component
+// Product Collection component with filtering
 export interface Props {
     products: Array<{
         id: string;
@@ -8,193 +8,296 @@ export interface Props {
         price: number;
         image?: string;
         category?: string;
-        notes?: string[];
+        productType?: string;
+        gender?: string;
+        notes?: {
+            top: string[];
+            middle: string[];
+            base: string[];
+        };
+        inStock?: boolean;
+        featured?: boolean;
+    }>;
+    categories: Array<{
+        id: string;
+        name: string;
+        description: string;
+    }>;
+    productTypes: Array<{
+        id: string;
+        name: string;
+        description: string;
+    }>;
+    genders: Array<{
+        id: string;
+        name: string;
+        description: string;
     }>;
 }
 
-const { products } = Astro.props;
+const { products, categories, productTypes, genders } = Astro.props;
 ---
 
 <section id="collection" class="collection">
     <div class="container">
         <h2 class="section-title">Our Signature Collection</h2>
-        <div class="products-grid">
+        
+        <!-- Filter Controls -->
+        <div class="filter-controls">
+            <div class="filter-group">
+                <label>Product Type:</label>
+                <select id="productTypeFilter" class="filter-select">
+                    <option value="all">All Products</option>
+                    {productTypes.map((type) => (
+                        <option value={type.id}>{type.name}</option>
+                    ))}
+                </select>
+            </div>
+            
+            <div class="filter-group">
+                <label>Category:</label>
+                <select id="categoryFilter" class="filter-select">
+                    <option value="all">All Categories</option>
+                    {categories.map((category) => (
+                        <option value={category.id}>{category.name}</option>
+                    ))}
+                </select>
+            </div>
+            
+            <div class="filter-group">
+                <label>For:</label>
+                <select id="genderFilter" class="filter-select">
+                    <option value="all">Everyone</option>
+                    {genders.map((gender) => (
+                        <option value={gender.id}>{gender.name}</option>
+                    ))}
+                </select>
+            </div>
+        </div>
+        
+        <!-- Pagination Info -->
+        <div class="pagination-info">
+            <span id="paginationText">Showing 1-6 of {products.length} products</span>
+        </div>
+        
+        <div class="products-grid" id="productsGrid">
             {products.map((product) => (
-                <div class="product-card" data-product={product.id}>
-                    <div class="product-image-container">
-                        <div class="product-image">
-                            {product.image ? (
-                                <img src={product.image} alt={product.name} class="perfume-image" />
-                            ) : (
-                                <div class="product-placeholder">
-                                    <div class="luxury-bottle"></div>
-                                </div>
-                            )}
-                            <div class="luxury-shine"></div>
-                        </div>
-                        <div class="product-overlay">
-                            <div class="overlay-content">
-                                <button class="luxury-btn quick-view" data-product={product.id}>
-                                    <i class="fas fa-eye"></i>
-                                    <span>Quick View</span>
-                                </button>
-                                <button class="luxury-btn add-to-wishlist" data-product={product.id}>
-                                    <i class="fas fa-heart"></i>
-                                </button>
-                            </div>
-                        </div>
+                <div class="product-card" 
+                     data-product={product.id}
+                     data-category={product.category?.toLowerCase()}
+                     data-product-type={product.productType}
+                     data-gender={product.gender}>
+                    <div class="product-image">
+                        {product.image ? (
+                            <img src={product.image} alt={product.name} class="perfume-image" />
+                        ) : (
+                            <div class="product-placeholder"></div>
+                        )}
                     </div>
                     <div class="product-info">
-                        {product.category && <span class="product-category">{product.category}</span>}
+                        <div class="product-badges">
+                            <span class="product-category">{product.category}</span>
+                            <span class="product-type">{product.productType?.replace('-', ' ')}</span>
+                            {product.inStock === false && <span class="out-of-stock">Out of Stock</span>}
+                        </div>
                         <h3 class="product-name">{product.name}</h3>
                         <p class="product-description">{product.description}</p>
-                        {product.notes && (
-                            <div class="product-notes">
-                                <span class="notes-label">Notes:</span>
-                                <div class="notes-list">
-                                    {product.notes.map((note) => (
-                                        <span class="note-tag">{note}</span>
-                                    ))}
-                                </div>
-                            </div>
-                        )}
-                        <div class="product-price-section">
-                            <div class="product-price">${product.price}</div>
-                            <div class="price-label">50ml Eau de Parfum</div>
-                        </div>
-                        <button class="luxury-add-to-cart" data-product={product.id} data-price={product.price}>
-                            <span class="btn-text">Add to Cart</span>
-                            <i class="fas fa-shopping-bag"></i>
+                        <div class="product-price">${product.price}</div>
+                        
+                        <!-- View Details Link -->
+                        <a href={`/product/${product.slug || product.id}`} class="view-details-link">
+                            View Details
+                        </a>
+                        
+                        <button class="add-to-cart" data-product={product.id} data-price={product.price} disabled={product.inStock === false}>
+                            {product.inStock !== false ? 'Add to Cart' : 'Out of Stock'}
                         </button>
                     </div>
                 </div>
             ))}
         </div>
+        
+        <!-- Pagination Controls -->
+        <div class="pagination-controls">
+            <button id="prevBtn" class="pagination-btn" disabled>
+                <i class="fas fa-chevron-left"></i>
+                Previous
+            </button>
+            
+            <div class="pagination-numbers" id="paginationNumbers">
+                <!-- Page numbers will be generated by JavaScript -->
+            </div>
+            
+            <button id="nextBtn" class="pagination-btn">
+                Next
+                <i class="fas fa-chevron-right"></i>
+            </button>
+        </div>
     </div>
 </section>
 
 <style>
-/* Collection Section */
+/* Collection Section - Minimalistic */
 .collection {
-    padding: 120px 0;
-    background: linear-gradient(135deg, var(--luxury-cream) 0%, #ffffff 100%);
-    position: relative;
-}
-
-.collection::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 1px;
-    background: linear-gradient(90deg, transparent, var(--luxury-gold), transparent);
+    padding: 80px 0;
+    background: #ffffff;
 }
 
 .products-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-    gap: 4rem;
-    margin-top: 3rem;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 2rem;
+    margin-top: 2rem;
 }
 
 .product-card {
     background: #ffffff;
-    border-radius: 20px;
+    border: 1px solid #f0f0f0;
+    border-radius: 8px;
     overflow: hidden;
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
-    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-    border: 1px solid rgba(212, 175, 55, 0.1);
-    opacity: 0;
-    transform: translateY(50px);
-    animation: luxuryFadeIn 0.8s ease forwards;
-    position: relative;
-}
-
-.product-card:nth-child(2) {
-    animation-delay: 0.1s;
-}
-
-.product-card:nth-child(3) {
-    animation-delay: 0.2s;
-}
-
-.product-card:nth-child(4) {
-    animation-delay: 0.3s;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 }
 
 .product-card:hover {
-    transform: translateY(-10px);
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+    border-color: #ddd;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
 .product-image {
     position: relative;
-    height: 300px;
-    overflow: hidden;
-}
-
-.product-placeholder {
     width: 100%;
-    height: 100%;
-    background: linear-gradient(145deg, #f8f8f8, #e8e8e8);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    position: relative;
+    height: 0;
+    padding-bottom: 75%; /* 4:3 aspect ratio */
+    background: #f8f8f8;
+    overflow: hidden;
+    border-radius: 8px 8px 0 0;
 }
 
-.product-placeholder::before {
-    content: '';
-    width: 80px;
-    height: 120px;
-    background: linear-gradient(145deg, #e0e0e0, #d0d0d0);
-    border-radius: 10px 10px 30px 30px;
-    position: relative;
-}
-
-.product-overlay {
+.perfume-image {
     position: absolute;
     top: 0;
     left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(44, 44, 44, 0.8);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    opacity: 0;
-    transition: opacity 0.3s ease;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    object-position: center;
+    transition: transform 0.3s ease;
 }
 
-.product-card:hover .product-overlay {
-    opacity: 1;
+.product-card:hover .perfume-image {
+    transform: scale(1.05);
 }
 
-.quick-view {
-    background: white;
-    color: #2c2c2c;
-    border: none;
-    padding: 10px 20px;
-    cursor: pointer;
-    border-radius: 2px;
-    font-weight: 500;
-    transition: all 0.3s ease;
-}
-
-.quick-view:hover {
-    background: #8b7355;
-    color: white;
+.product-placeholder {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 80px;
+    height: 120px;
+    background: linear-gradient(145deg, #e8e8e8, #d8d8d8);
+    border-radius: 8px 8px 25px 25px;
+    box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
 }
 
 .product-info {
     padding: 1.5rem;
 }
 
-.product-info h3 {
-    font-size: 1.3rem;
-    margin-bottom: 0.5rem;
+.filter-controls {
+    display: flex;
+    gap: 3rem;
+    margin-bottom: 4rem;
+    padding: 3rem 2rem;
+    background: linear-gradient(145deg, #faf8f5, #f5f3f0);
+    border: 1px solid rgba(139, 115, 85, 0.1);
+    border-radius: 12px;
+    flex-wrap: wrap;
+    justify-content: center;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+}
+
+.filter-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    min-width: 160px;
+}
+
+.filter-group label {
+    font-family: 'Playfair Display', serif;
+    font-weight: 400;
     color: #2c2c2c;
+    font-size: 1rem;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    font-size: 0.85rem;
+}
+
+.filter-select {
+    padding: 0.75rem 1.25rem;
+    border: 2px solid rgba(139, 115, 85, 0.2);
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.9);
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-family: 'Inter', sans-serif;
+    color: #2c2c2c;
+    backdrop-filter: blur(10px);
+}
+
+.filter-select:hover {
+    border-color: rgba(139, 115, 85, 0.4);
+    background: rgba(255, 255, 255, 1);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(139, 115, 85, 0.15);
+}
+
+.filter-select:focus {
+    outline: none;
+    border-color: #8b7355;
+    background: rgba(255, 255, 255, 1);
+    box-shadow: 0 0 0 3px rgba(139, 115, 85, 0.1);
+}
+
+.product-badges {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.product-category {
+    display: inline-block;
+    background: #8b7355;
+    color: white;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.product-type {
+    display: inline-block;
+    background: #e8e8e8;
+    color: #666;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: 500;
+    text-transform: capitalize;
+    letter-spacing: 0.5px;
+}
+
+.product-name {
+    font-size: 1.2rem;
+    margin-bottom: 0.5rem;
+    color: #1a1a1a;
+    font-weight: 400;
 }
 
 .product-description {
@@ -205,33 +308,416 @@ const { products } = Astro.props;
 }
 
 .product-price {
-    font-size: 1.5rem;
-    font-weight: 600;
-    color: #8b7355;
+    font-size: 1.3rem;
+    font-weight: 500;
+    color: #1a1a1a;
     margin-bottom: 1rem;
 }
 
 .add-to-cart {
     width: 100%;
-    background: #2c2c2c;
+    background: #1a1a1a;
     color: white;
     border: none;
     padding: 12px;
     cursor: pointer;
-    transition: all 0.3s ease;
     font-weight: 500;
-    letter-spacing: 0.5px;
+    letter-spacing: 1px;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    font-size: 0.8rem;
 }
 
-.add-to-cart:hover {
+.add-to-cart:hover:not(:disabled) {
+    background: #333;
+}
+
+.add-to-cart:disabled {
+    background: #ccc;
+    color: #666;
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+/* View Details Link */
+.view-details-link {
+    display: inline-block;
+    background: transparent;
+    border: 1px solid #8b7355;
+    color: #8b7355;
+    padding: 0.75rem 1.5rem;
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: 500;
+    text-align: center;
+    border-radius: 6px;
+    transition: all 0.3s ease;
+    margin-bottom: 1rem;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    font-family: 'Inter', sans-serif;
+}
+
+.view-details-link:hover {
     background: #8b7355;
+    color: white;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(139, 115, 85, 0.2);
+}
+
+/* Out of Stock Badge */
+.out-of-stock {
+    display: inline-block;
+    background: #f44336;
+    color: white;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
 }
 
 /* Responsive Design */
 @media (max-width: 768px) {
     .products-grid {
-        grid-template-columns: 1fr;
-        gap: 2rem;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 1.5rem;
+    }
+    
+    .filter-controls {
+        flex-direction: column;
+        gap: 1.5rem;
+        padding: 2rem 1.5rem;
+        margin-bottom: 3rem;
+    }
+    
+    .filter-group {
+        width: 100%;
+        min-width: auto;
+    }
+    
+    .product-image {
+        padding-bottom: 80%;
+    }
+    
+    .pagination-controls {
+        gap: 1rem;
+        margin-top: 3rem;
+    }
+    
+    .pagination-btn {
+        padding: 0.75rem 1.5rem;
+        font-size: 0.85rem;
     }
 }
+
+@media (max-width: 480px) {
+    .products-grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+    
+    .product-image {
+        padding-bottom: 85%;
+    }
+    
+    .product-info {
+        padding: 1rem;
+    }
+    
+    
+    .filter-controls {
+        padding: 1.5rem 1rem;
+        gap: 1rem;
+    }
+    
+    .pagination-controls {
+        gap: 0.75rem;
+        margin-top: 2.5rem;
+        flex-direction: column;
+    }
+    
+    .pagination-btn {
+        padding: 0.75rem 1.25rem;
+        font-size: 0.8rem;
+        width: 100%;
+        max-width: 200px;
+    }
+    
+    .pagination-numbers {
+        gap: 0.5rem;
+        order: -1;
+    }
+    
+    .page-number {
+        padding: 0.6rem 0.8rem;
+        font-size: 0.85rem;
+        min-width: 40px;
+    }
+}
+
+/* Hidden products during filtering */
+.product-card.hidden {
+    display: none;
+}
+
+/* Pagination Styles */
+.pagination-info {
+    text-align: center;
+    margin-bottom: 2.5rem;
+    color: #666;
+    font-size: 0.95rem;
+    font-family: 'Inter', sans-serif;
+    letter-spacing: 0.3px;
+}
+
+.pagination-controls {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1.5rem;
+    margin-top: 4rem;
+    flex-wrap: wrap;
+    padding: 2rem 0;
+}
+
+.pagination-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 1rem 2rem;
+    background: linear-gradient(145deg, #2c2c2c, #1a1a1a);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    font-size: 0.9rem;
+    font-family: 'Inter', sans-serif;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.pagination-btn:hover:not(:disabled) {
+    background: linear-gradient(145deg, #8b7355, #6d5a44);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(139, 115, 85, 0.3);
+}
+
+.pagination-btn:disabled {
+    background: linear-gradient(145deg, #e0e0e0, #d0d0d0);
+    color: #999;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.pagination-numbers {
+    display: flex;
+    gap: 0.75rem;
+    align-items: center;
+    padding: 0 1rem;
+}
+
+.page-number {
+    padding: 0.75rem 1rem;
+    background: rgba(255, 255, 255, 0.9);
+    border: 2px solid rgba(139, 115, 85, 0.2);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 0.9rem;
+    font-weight: 500;
+    min-width: 45px;
+    text-align: center;
+    font-family: 'Inter', sans-serif;
+    color: #2c2c2c;
+    backdrop-filter: blur(10px);
+}
+
+.page-number:hover {
+    background: rgba(139, 115, 85, 0.1);
+    border-color: rgba(139, 115, 85, 0.4);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(139, 115, 85, 0.15);
+}
+
+.page-number.active {
+    background: linear-gradient(145deg, #8b7355, #6d5a44);
+    color: white;
+    border-color: #8b7355;
+    box-shadow: 0 4px 12px rgba(139, 115, 85, 0.3);
+    transform: translateY(-1px);
+}
+
+.page-ellipsis {
+    padding: 0.75rem;
+    color: #8b7355;
+    font-weight: 500;
+    font-family: 'Playfair Display', serif;
+}
 </style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const productTypeFilter = document.getElementById('productTypeFilter');
+    const categoryFilter = document.getElementById('categoryFilter');
+    const genderFilter = document.getElementById('genderFilter');
+    const productCards = document.querySelectorAll('.product-card');
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const paginationNumbers = document.getElementById('paginationNumbers');
+    const paginationText = document.getElementById('paginationText');
+    
+    // Pagination variables
+    const PRODUCTS_PER_PAGE = 6;
+    let currentPage = 1;
+    let filteredProducts = Array.from(productCards);
+    let totalPages = Math.ceil(filteredProducts.length / PRODUCTS_PER_PAGE);
+
+    function filterProducts() {
+        const selectedProductType = productTypeFilter.value;
+        const selectedCategory = categoryFilter.value;
+        const selectedGender = genderFilter.value;
+
+        filteredProducts = Array.from(productCards).filter(card => {
+            const cardProductType = card.getAttribute('data-product-type');
+            const cardCategory = card.getAttribute('data-category');
+            const cardGender = card.getAttribute('data-gender');
+
+            let showCard = true;
+
+            // Filter by product type
+            if (selectedProductType !== 'all' && cardProductType !== selectedProductType) {
+                showCard = false;
+            }
+
+            // Filter by category
+            if (selectedCategory !== 'all' && cardCategory !== selectedCategory.toLowerCase()) {
+                showCard = false;
+            }
+
+            // Filter by gender
+            if (selectedGender !== 'all' && cardGender !== selectedGender) {
+                showCard = false;
+            }
+
+            return showCard;
+        });
+
+        // Reset to first page when filters change
+        currentPage = 1;
+        totalPages = Math.ceil(filteredProducts.length / PRODUCTS_PER_PAGE);
+        updatePagination();
+        showCurrentPage();
+    }
+
+    function showCurrentPage() {
+        // Hide all products first
+        productCards.forEach(card => {
+            card.classList.add('hidden');
+        });
+
+        // Calculate start and end indices
+        const startIndex = (currentPage - 1) * PRODUCTS_PER_PAGE;
+        const endIndex = startIndex + PRODUCTS_PER_PAGE;
+
+        // Show products for current page
+        filteredProducts.slice(startIndex, endIndex).forEach(card => {
+            card.classList.remove('hidden');
+        });
+
+        // Update pagination info text
+        const totalProducts = filteredProducts.length;
+        const startProduct = totalProducts === 0 ? 0 : startIndex + 1;
+        const endProduct = Math.min(endIndex, totalProducts);
+        paginationText.textContent = `Showing ${startProduct}-${endProduct} of ${totalProducts} products`;
+    }
+
+    function updatePagination() {
+        // Update button states
+        prevBtn.disabled = currentPage === 1;
+        nextBtn.disabled = currentPage === totalPages || totalPages === 0;
+
+        // Generate page numbers
+        paginationNumbers.innerHTML = '';
+        
+        if (totalPages <= 1) {
+            return;
+        }
+
+        // Always show first page
+        if (currentPage > 3) {
+            addPageNumber(1);
+            if (currentPage > 4) {
+                addEllipsis();
+            }
+        }
+
+        // Show pages around current page
+        const start = Math.max(1, currentPage - 2);
+        const end = Math.min(totalPages, currentPage + 2);
+        
+        for (let i = start; i <= end; i++) {
+            addPageNumber(i);
+        }
+
+        // Always show last page
+        if (currentPage < totalPages - 2) {
+            if (currentPage < totalPages - 3) {
+                addEllipsis();
+            }
+            addPageNumber(totalPages);
+        }
+    }
+
+    function addPageNumber(pageNum) {
+        const pageBtn = document.createElement('button');
+        pageBtn.className = `page-number ${pageNum === currentPage ? 'active' : ''}`;
+        pageBtn.textContent = pageNum;
+        pageBtn.addEventListener('click', () => {
+            currentPage = pageNum;
+            updatePagination();
+            showCurrentPage();
+        });
+        paginationNumbers.appendChild(pageBtn);
+    }
+
+    function addEllipsis() {
+        const ellipsis = document.createElement('span');
+        ellipsis.className = 'page-ellipsis';
+        ellipsis.textContent = '...';
+        paginationNumbers.appendChild(ellipsis);
+    }
+
+    // Event listeners
+    prevBtn.addEventListener('click', () => {
+        if (currentPage > 1) {
+            currentPage--;
+            updatePagination();
+            showCurrentPage();
+        }
+    });
+
+    nextBtn.addEventListener('click', () => {
+        if (currentPage < totalPages) {
+            currentPage++;
+            updatePagination();
+            showCurrentPage();
+        }
+    });
+
+    // Add event listeners to all filter controls
+    productTypeFilter.addEventListener('change', filterProducts);
+    categoryFilter.addEventListener('change', filterProducts);
+    genderFilter.addEventListener('change', filterProducts);
+
+
+    // Initialize pagination
+    updatePagination();
+    showCurrentPage();
+});
+</script>

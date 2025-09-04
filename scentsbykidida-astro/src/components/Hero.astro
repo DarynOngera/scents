@@ -1,127 +1,101 @@
 ---
 // Hero section component
+export interface Props {
+    site: {
+        tagline: string;
+        description: string;
+    };
+}
+
+const { site } = Astro.props;
 ---
 
 <section id="home" class="hero">
     <div class="hero-content">
-        <h1 class="hero-title">Luxury Redefined</h1>
-        <p class="hero-subtitle">Discover our exclusive collection of premium fragrances crafted for the discerning individual</p>
+        <h1 class="hero-title">
+            <span class="typewriter" data-text={site.tagline}></span>
+        </h1>
+        <p class="hero-subtitle">{site.description}</p>
         <button class="cta-button">Explore Collection</button>
-    </div>
-    <div class="hero-image">
-        <div class="perfume-bottle"></div>
     </div>
 </section>
 
 <style>
-/* Hero Section */
+/* Hero Section - Minimalistic */
 .hero {
-    min-height: 100vh;
+    min-height: 80vh;
     display: flex;
     align-items: center;
-    padding: 100px 20px 50px;
-    background: linear-gradient(135deg, #ffffff 0%, #f8f8f8 100%);
+    justify-content: center;
+    padding: 120px 20px 80px;
+    background: #ffffff;
+    text-align: center;
 }
 
 .hero-content {
-    flex: 1;
-    max-width: 600px;
-    margin-right: 2rem;
+    max-width: 800px;
 }
 
 .hero-title {
-    font-size: 4rem;
-    color: #2c2c2c;
-    margin-bottom: 1rem;
+    font-size: 3.5rem;
+    color: #1a1a1a;
+    margin-bottom: 1.5rem;
     font-weight: 300;
-    letter-spacing: 2px;
-    line-height: 1.1;
-    opacity: 0;
-    transform: translateY(30px);
-    animation: fadeInUp 0.8s ease forwards 0.2s;
+    letter-spacing: 3px;
+    line-height: 1.2;
+    min-height: 4.2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
+.typewriter {
+    display: inline-block;
+    overflow: hidden;
+    white-space: nowrap;
+    margin: 0 auto;
+    animation: typing 3s steps(40, end), blink-caret 0.75s step-end infinite;
+}
+
+
+@keyframes typing {
+    from {
+        width: 0;
+    }
+    to {
+        width: 100%;
+    }
+}
+
+
 .hero-subtitle {
-    font-size: 1.2rem;
+    font-size: 1.1rem;
     color: #666;
-    margin-bottom: 2rem;
-    line-height: 1.6;
+    margin-bottom: 3rem;
+    line-height: 1.7;
     font-weight: 300;
-    opacity: 0;
-    transform: translateY(30px);
-    animation: fadeInUp 0.8s ease forwards 0.4s;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .cta-button {
-    background: #2c2c2c;
+    background: #1a1a1a;
     color: white;
     border: none;
-    padding: 15px 30px;
-    font-size: 1rem;
+    padding: 16px 32px;
+    font-size: 0.9rem;
     cursor: pointer;
     transition: all 0.3s ease;
-    letter-spacing: 1px;
+    letter-spacing: 2px;
     font-family: 'Inter', sans-serif;
-    border-radius: 2px;
-    opacity: 0;
-    transform: translateY(30px);
-    animation: fadeInUp 0.8s ease forwards 0.6s;
+    text-transform: uppercase;
+    font-weight: 500;
 }
 
 .cta-button:hover {
-    background: #8b7355;
-    transform: translateY(-2px);
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
-}
-
-.hero-image {
-    flex: 1;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-.perfume-bottle {
-    width: 300px;
-    height: 400px;
-    background: linear-gradient(145deg, #f0f0f0, #e0e0e0);
-    border-radius: 20px 20px 80px 80px;
-    position: relative;
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
-    opacity: 0;
-    transform: translateY(30px) scale(0.9);
-    animation: fadeInBottle 1s ease forwards 0.8s;
-}
-
-.perfume-bottle::before {
-    content: '';
-    position: absolute;
-    top: -30px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 60px;
-    height: 40px;
-    background: #8b7355;
-    border-radius: 10px 10px 0 0;
-}
-
-.perfume-bottle::after {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 200px;
-    height: 250px;
-    background: linear-gradient(145deg, rgba(139, 115, 85, 0.1), rgba(139, 115, 85, 0.3));
-    border-radius: 10px;
-}
-
-@keyframes fadeInBottle {
-    to {
-        opacity: 1;
-        transform: translateY(0) scale(1);
-    }
+    background: #333;
+    transform: translateY(-1px);
 }
 
 /* Responsive Design */
@@ -159,8 +133,32 @@
 </style>
 
 <script>
-// CTA button scroll to collection
+// Typewriter animation and CTA button functionality
 document.addEventListener('DOMContentLoaded', function() {
+    // Typewriter animation
+    const typewriterElement = document.querySelector('.typewriter');
+    const cursorElement = document.querySelector('.cursor');
+    
+    if (typewriterElement) {
+        const text = typewriterElement.getAttribute('data-text') || '';
+        typewriterElement.textContent = '';
+        
+        let i = 0;
+        const typeSpeed = 100; // milliseconds per character
+        
+        function typeWriter() {
+            if (i < text.length) {
+                typewriterElement.textContent += text.charAt(i);
+                i++;
+                setTimeout(typeWriter, typeSpeed);
+            }
+        }
+        
+        // Start typing after a short delay
+        setTimeout(typeWriter, 500);
+    }
+    
+    // CTA button scroll to collection
     const ctaButton = document.querySelector('.cta-button');
     if (ctaButton) {
         ctaButton.addEventListener('click', function() {

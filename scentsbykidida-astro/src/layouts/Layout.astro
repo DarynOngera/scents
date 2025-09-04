@@ -87,6 +87,40 @@ const { title } = Astro.props;
 		scroll-behavior: smooth;
 	}
 
+	/* Global Responsive Image Utilities */
+	img {
+		max-width: 100%;
+		height: auto;
+		display: block;
+	}
+
+	.img-responsive {
+		width: 100%;
+		height: auto;
+		object-fit: cover;
+	}
+
+	.img-contain {
+		width: 100%;
+		height: auto;
+		object-fit: contain;
+	}
+
+	.img-aspect-square {
+		aspect-ratio: 1 / 1;
+		object-fit: cover;
+	}
+
+	.img-aspect-4-3 {
+		aspect-ratio: 4 / 3;
+		object-fit: cover;
+	}
+
+	.img-aspect-16-9 {
+		aspect-ratio: 16 / 9;
+		object-fit: cover;
+	}
+
 	/* Loading Animation */
 	@keyframes fadeInUp {
 		from {
